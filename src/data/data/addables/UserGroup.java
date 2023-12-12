@@ -3,13 +3,15 @@ package data.data.addables;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Holds the group information.
  */
 public class UserGroup extends UUG{
-    private final List<User> users = new ArrayList<>();
-    private final List<UserGroup> subgroups = new ArrayList<>();
+    private final Set<User> users = new HashSet<>();
+    private final Set<UserGroup> subgroups = new HashSet<>();
 
     public UserGroup(String id) {
        super(id);
@@ -24,6 +26,15 @@ public class UserGroup extends UUG{
         super(id);
         setUsers(users);
         setSubgroups(subgroups);
+    }
+
+    public boolean validateUser(User user){
+        if(users.contains(user) || user.getId().contains(" ")){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     public User[] getUsers() {
