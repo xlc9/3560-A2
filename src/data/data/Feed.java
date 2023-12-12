@@ -11,6 +11,7 @@ import java.util.TreeSet;
  */
 public class Feed extends Subject {
     private final TreeSet<Tweet> tweets = new TreeSet<>(Comparator.comparing(Tweet::getDate));
+    private long lastUpdateTime = 0;
 
     public Tweet[] getTweets() {
         return tweets.toArray(Tweet[]::new);
@@ -23,6 +24,7 @@ public class Feed extends Subject {
 
     public void addTweet(Tweet tweet) {
         tweets.add(tweet);
+        lastUpdateTime = System.currentTimeMillis();
         notifyObservers();
     }
 
@@ -31,4 +33,11 @@ public class Feed extends Subject {
         notifyObservers();
     }
 
+    public long getLastUpdateTime(){
+        return lastUpdateTime;
+    }
+
+    public void setLastUpdateTime(long lastUpdateTime){
+        this.lastUpdateTime = lastUpdateTime;
+    }
 }
