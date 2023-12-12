@@ -66,6 +66,10 @@ public class FeedPanel extends JPanel {
         JScrollPane listScroller = new JScrollPane(list);
         add(listScroller);
 
+        JLabel lastUpdate = new JLabel();
+        lastUpdate.setText("Last Update (in milliseconds): "+ user.getLastUpdateTime());
+        add(lastUpdate);
+
         JButton addTweetButton = new JButton("Add Tweet");
         addTweetButton.addActionListener(actionEvent -> {
             String content = JOptionPane.showInputDialog("Content");
