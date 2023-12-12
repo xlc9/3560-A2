@@ -17,7 +17,7 @@ public class UserView extends JFrame {
 
         setResizable(false);
         setSize(400, 500);
-        setTitle(user.getId());
+        setTitle(user.getId() + " | Creation Time (in milliseconds): "+user.getTimeMade() );
 
         FeedPanel feedPanel = new FeedPanel(user);
         FollowingPanel followingPanel = new FollowingPanel(user);
