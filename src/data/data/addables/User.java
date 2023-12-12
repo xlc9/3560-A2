@@ -12,9 +12,11 @@ public class User extends UUG{
     private final Feed feed = new Feed();
     private Set<User> followers = new HashSet<>();
     private Set<User> following = new HashSet<>();
+    private long lastUpdateTime;
 
     public User(String id) {
        super(id);
+       lastUpdateTime = feed.getLastUpdateTime();
     }
 
     public Set<User> getFollowers() {
@@ -46,6 +48,19 @@ public class User extends UUG{
 
         // Add ourselves as a follower to the target user.
         user.addFollower(this);
+        if(user.getFeed().getLastUpdateTime() > this.lastUpdateTime){
+            feed.setLastUpdateTime(user.getFeed().getLastUpdateTime());
+        }
+    }
+
+    public long getLastUpdateTime(){
+        lastUpdateTime = feed.getLastUpdateTime();
+        return lastUpdateTime;
+    }
+
+    public void setLastUpdateTime(long lastUpdateTime)
+    {
+        this.lastUpdateTime = lastUpdateTime;
     }
 
     public Feed getFeed() {
