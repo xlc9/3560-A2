@@ -20,6 +20,7 @@ public class ManagePanel extends JPanel {
     private final DataManager dataManager = DataManager.getInstance();
     private Runnable onRefreshListener;
     private Runnable onOpenUserViewListener;
+    private User lastUpdated;
 
     public ManagePanel() {
         setLayout(new FlowLayout(FlowLayout.CENTER, 5, 45));
@@ -43,7 +44,7 @@ public class ManagePanel extends JPanel {
             String groupId = groupIdField.getText();
 
             addUser(userId, groupId);
-
+            
             if (onRefreshListener != null)
                 onRefreshListener.run();
         });
@@ -86,7 +87,7 @@ public class ManagePanel extends JPanel {
 
         //checks percentage of good tweets button
         JButton checkGoodnessButton = new JButton("Check goodness");
-        checkGoodnessButton.setPreferredSize(new Dimension(455,50));
+        checkGoodnessButton.setPreferredSize(new Dimension(150,50));
         checkGoodnessButton.addActionListener(actionEvent -> {
             double totalGoodness = 0;
             int tweetCount = 0;
@@ -108,6 +109,44 @@ public class ManagePanel extends JPanel {
             JOptionPane.showMessageDialog(null, "Total goodness: " + totalGoodness * 100 + "%");
         });
         add(checkGoodnessButton);
+
+        JButton  validateUsers= new JButton("Validate Users");
+        validateUsers.setPreferredSize(new Dimension(150,50));
+        validateUsers.addActionListener(actionEvent -> {
+            User[] allUsers = dataManager.getRootGroup().getUsers();
+            UserGroup root = dataManager.getRootGroup();
+            boolean running = true;
+            for(int i = 0;i<allUsers.length && running == true;i++){
+                User currUser = allUsers[i];
+                if(root.validateUser(currUser) == false){
+                    JOptionPane.showMessageDialog(null, "User ID: " + allUsers[i].getId()+ " is invalid");
+                    running = false;
+                }
+            }
+            if(running){
+                JOptionPane.showMessageDialog(null, "All User IDs are valid");
+            }
+
+            
+        });
+        add(validateUsers);
+
+         JButton  lastUpdatedUser= new JButton("Show Last User");
+        lastUpdatedUser.setPreferredSize(new Dimension(150,50));
+        lastUpdatedUser.addActionListener(actionEvent -> {
+            int mostRecent = 0;
+            User[] allUsers = dataManager.getRootGroup().getUsers();
+           for(int i = 0; i < allUsers.length;i++){
+                if(allUsers[mostRecent].getLastUpdateTime() < allUsers[i].getLastUpdateTime()){
+                    mostRecent = i;
+                }
+           }
+           lastUpdated = allUsers[mostRecent];
+
+            JOptionPane.showMessageDialog(null, "Last Updated User is: " + lastUpdated.getId());
+        });
+        add(lastUpdatedUser);
+
 
 
         
@@ -141,7 +180,6 @@ public class ManagePanel extends JPanel {
     private void addUser(String userId, String groupId) {
         if (userId.isEmpty())
             return;
-
         User user = new User(userId);
         UserGroup group;
 
@@ -153,6 +191,10 @@ public class ManagePanel extends JPanel {
 
         if (group != null) {
             group.addUser(user);
+            if(lastUpdated == null)
+            {   
+                lastUpdated = user;
+            }
         }
     }
 
